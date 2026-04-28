@@ -1,0 +1,35 @@
+# Build outputs
+/Build/
+/Generated/
+*.o
+*.asm
+*.lst
+*.sym
+*.map
+*.noi
+*.ihx
+*.rel
+*.lk
+
+# ROM and binary outputs
+*.gb
+*.gbc
+*.bin
+
+# Python cache (tooling scripts)
+__pycache__/
+*.pyc
+*.pyo
+
+# Temporary/tooling scratch files
+*.tmp
+*.bak
+*.orig
+
+# Editor/OS noise
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
