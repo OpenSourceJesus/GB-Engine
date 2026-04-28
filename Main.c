@@ -7,5 +7,5 @@ UINT8 GetTileReplacement (UINT8* tile_ptr, UINT8* tile)
 {
 	(void)tile_ptr;
 	(void)tile;
-	return 0;
+	return 255u;
 }

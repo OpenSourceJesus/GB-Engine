@@ -1,8 +1,13 @@
-#pragma bank 255
+#pragma bank 0
 
 #include "StateGame.h"
 #include "ZGBMain.h"
 #include "Scroll.h"
+#include "BankManager.h"
+#include <gb/gb.h>
+#ifdef CGB
+#include <gb/cgb.h>
+#endif
 
 #ifdef USE_LDTK_MAP
 #include "ldtk_map.h"
@@ -13,7 +18,7 @@ const void __at(255) __bank_StateGame;
 void Start_StateGame (void)
 {
 #ifdef USE_LDTK_MAP
-	InitScroll(0, &ldtk_map, 0, 0);
+	InitScroll(BANK(ldtk_map), &ldtk_map, 0, 0);
 #endif
 }
 

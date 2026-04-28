@@ -33,3 +33,5 @@ __pycache__/
 *.swo
 .DS_Store
 Thumbs.db
+
+*.sav
