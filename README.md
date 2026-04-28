@@ -1,36 +1,40 @@
-# ZGB + LDtk setup
+# GB Engine build system (ZGB + optional LDtk)
 
-This project is configured to build a Game Boy Color ROM (`.gbc`) with ZGB and level data exported from LDtk.
+This repository is a reusable Game Boy build system based on ZGB. It can build a ROM with plain C sources, or optionally generate map/tiles data from LDtk and a PNG tileset.
 
-## What is wired up
+## Build modes
 
-- `tools/ldtk_to_zgb.py` converts an LDtk level file into:
-  - `generated/ldtk_level0_map.h`
-  - `generated/ldtk_level0_map.c`
-- `GameState.c` loads that generated map in `Start_StateGame()`.
-- `Makefile` builds:
-  - your project files (`Main.c`, `GameState.c`)
-  - generated LDtk map files
-  - ZGB engine sources from `$(ZGB_PATH)/src/*.c`
+- Default build (no LDtk generation):
+  - compiles all root-level `*.c` project files
+  - compiles ZGB engine sources from `ZGB/common/src`
+  - writes ROM as `game.gbc` (or `<PROJECT_NAME>.gbc` if overridden)
+- LDtk build (`USE_LDTK=1`):
+  - runs `Tools/ldtk_to_zgb.py`
+  - generates `Generated/ldtk_map.c` and `Generated/ldtk_map.h`
+  - ensures a `tiles` symbol exists by generating `Generated/tiles.c`:
+    - from `png2asset` when `USE_PNG2ASSET=1`
+    - otherwise from `Tools/placeholder_tiles.c`
 
-## Expected inputs
-
-- LDtk level file: `Tiles/Grasslands/Level_0.ldtkl`
-- LDtk tile layer name: `Grasslands`
-- Tileset PNG: `Tiles/Grasslands/Grasslands.png`
-
-You can override these at build time:
+## Common commands
 
 ```bash
-make LDTK_FILE="path/to/level.ldtkl" LDTK_LAYER="LayerName" TILESET_PNG="path/to/tiles.png"
-```
-
-## Build
-
-```bash
+# default build
 make
+
+# LDtk map generation enabled
+make USE_LDTK=1 LDTK_FILE="Tiles/Grasslands/Level_0.ldtkl"
+
+# LDtk map + png2asset tileset conversion
+make USE_LDTK=1 USE_PNG2ASSET=1 \
+  LDTK_FILE="Tiles/Grasslands/Level_0.ldtkl" \
+  TILESET_PNG="Tiles/Grasslands/Grasslands.png"
 ```
 
-Output ROM: `SlimeJump.gbc`
+## Useful overrides
 
-If `TILESET_PNG` is missing, the build uses a one-tile placeholder so compilation can still proceed while you hook up art exports.
+- `PROJECT_NAME` (default: `game`)
+- `PROJECT_SRCS` (default: all root `*.c`)
+- `ZGB_PATH` (default: `ZGB/common`; falls back to local `ZGB/common` when present)
+- `LDTK_FILE`, `LDTK_LAYER`
+- `USE_PNG2ASSET`, `TILESET_PNG`
+- `GENERATED_DIR`, `BUILD_DIR`
